@@ -1,0 +1,122 @@
+---
+title: "Atividade Assíncrona 1 - Séries Temporais"
+author: "Rodrigo Marreiros Tavares Graim"
+format:
+  pdf:
+    documentclass: article  
+    toc: false              
+    toc-title: "Sumário"
+    toc-depth: 3            
+    fontsize: 12pt          
+    linestretch: 1.5        
+    geometry: 
+      - "left=0.5in"
+      - "right=1in"
+      - "top=0.5in"
+      - "bottom=1in"  
+    header-includes: |
+      \usepackage[utf8]{inputenc}
+      \let\oldtableofcontents\tableofcontents
+      \renewcommand{\tableofcontents}{\newpage\oldtableofcontents}
+      \usepackage{amsfonts, amsmath, amsthm}
+      \usepackage{amssymb}
+      \usepackage{graphicx}
+      \usepackage{float}
+      \usepackage{tabularx}
+      \usepackage{indentfirst}
+      \usepackage{hhline}
+#      \setlength{\headheight}{4cm}
+#      \setlength{\topmargin}{-2.0cm}
+    number-sections: true
+lang: pt
+---
+
+```{r, echo = FALSE, warning=FALSE, include=FALSE}
+#install.packages("readxl","TSA","tseries","astsa","fUnitRoots")
+
+#ATENÇÃO: ERROS NOS PACOTES ESTÃO IMPOSSIBILITANDO A CONTINUAÇÃO DAS ANÁLISES
+
+
+require(readxl)
+require(TSA)
+require(tseries)
+require(astsa)
+require(fUnitRoots)
+```
+
+# Dados
+
+```{r, warning=FALSE}
+atmosfera <- read_excel("atmosfera.xls")
+names(atmosfera) <- c("Data", "Temperatura", "Umidade")
+
+temperatura <- atmosfera$Temperatura
+umidade <- atmosfera$Umidade
+```
+
+# Gráficos
+
+## Temperatura
+
+```{r, warning=FALSE}
+
+adf_temperatura <- adf.test(temperatura)
+adf_temperatura
+
+plot(temperatura, type = "l", main = "Série Temporal da Temperatura", xlab = "dia")
+```
+
+## Umidade
+
+```{r, warning=FALSE}
+adf_umidade <- adf.test(umidade)
+adf_umidade
+
+plot(umidade, type = "l", main = "Série Temporal da Umidade", xlab = "dia")
+```
+
+# Hipóteses
+
+## Temperatura
+
+$H_0 =$ A série temporal da temperatura não é estacionária 
+
+$H_1 =$ A série temporal da temperatura é estacionária
+
+## Umidade
+
+$H_0 =$ A série temporal da umidade não é estacionária
+
+$H_1 =$ A série temporal da umidade é estacionária
+
+# Nível de Significância
+
+## Temperatura
+
+$\alpha = 0.05$
+p-valor = 0.7136
+
+## Umidade
+
+$\alpha = 0.05$
+p-valor = 0.01
+
+# Conclusão
+
+## Temperatura
+
+Como o p-valor > $\alpha$, isto é, 0.7136 > 0.05, não se pode rejeitar a hipótese nula. Portanto,  a série temporal da Temperatura ambiente em uma determinada região no ano de 1997 não é estacionária, ao nível de significância de 5%
+
+## Umidade
+
+Como o p-valor > $\alpha$, isto é, 0.01 < 0.05, rejeita-se a hipótese nula. Portanto,  a série temporal da Umidade Relativa do ar em uma determinada região no ano de 1997 é estacionária, ao nível de significância de 5%
+
+# Sazonalidade
+
+## Temperatura
+
+É possível analisar uma sazonalidade dado que em determinados dias do ano a temperatura é mais quente e em outros é mais fria, expondo a mudança de estações de ano verão/quente e inverno/frio e vice-versa.
+
+## Umidade
+
+Não é possível analisar a sazonalidade já que o gráfico não apresenta tendências. Isso se dá porque a série é estacionária e a sua média e variância se mantêm constantes.
